@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card4">
+        <div class="dates-container4">
+            <!-- Left Column: Accepted Dates -->
+            <div class="column4 accepted-dates">
+                <h2>Accepted Dates</h2>
+                {% for date in accepted_dates %}
+                <div class="date-card4">
+                    <p style="text-align: center; margin-bottom: 5px;"><strong>{{ date.sender_profile.name }}</strong></p>
+                    <p style="text-align: center; margin-bottom: 20px;">{{ date.date_day.strftime('%d/%m/%Y') }}</p>
+                    <p><strong>Sent on:</strong> {{ date.timestamp_proposal.strftime('%d/%m/%Y %H:%M') }}</p>
+                    {% if date.timestamp_answer %}
+                        <p><strong>Answered on:</strong> 
+                            {{ date.timestamp_answer.strftime('%d/%m/%Y %H:%M') }}
+                        </p>  
+                    {% endif %}             
+                    <p><strong>Message:</strong> {{ date.opt_text_message }}</p>
+                    <p><strong>Response:</strong> {{ date.opt_text_response or 'No response' }}</p>
+                    {% if existing_chats[date.id] %}
+                        <!-- Redirect to existing chat -->
+                        <div class="edit-profile-container2" style="text-align: center; margin-top: 20px;">
+                            <a href="{{ url_for('main.get_unique_chat', chat_id=existing_chats[date.id].id, user_id=date.sender_profile.user_id) }}" 
+                            class="edit-profile-button2">Go to Chat</a>
+                        </div>
+                    {% else %}
+                        <!-- Create a new chat -->
+                        <form action="{{ url_for('main.create_chat', user_id=date.sender_profile.user_id) }}" method="post">
+                            <div class="edit-profile-container2" style="text-align: center; margin-top: 20px;">
+                                <button type="submit" class="edit-profile-button2">Start Chat</button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Right Column: New Dates -->
+            <div class="column4 ignored-dates">
+                <h2>New Dates</h2>
+                {% if pending_dates %}
+                    {% for date in pending_dates %}
+                    <div class="date-card4">
+                        <p style="text-align: center; margin-bottom: 5px;"><strong>{{ date.sender_profile.name }}</strong></p>
+                        <p style="text-align: center; margin-bottom: 20px;">{{ date.date_day.strftime('%d/%m/%Y') }}</p>
+                        <p><strong>Sent on:</strong> {{ date.timestamp_proposal.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p><strong>Message:</strong> {{ date.opt_text_message or 'No message' }}</p>
+
+                        <!-- Action Buttons -->
+                        <div id="buttons-{{ date.id }}">
+                            <form method="POST" action="{{ url_for('main.handle_date_action', date_id=date.id) }}">
+                                <textarea name="response_message" placeholder="Write an optional message..." class="response-message4"></textarea>
+                                <button type="submit" name="action" value="accept" class="action-button4 accept">Accept</button>
+                                <button type="submit" name="action" value="reject" class="action-button4 reject">Reject</button>
+                                <button type="submit" name="action" value="reschedule" class="action-button4 reschedule">Reschedule</button>
+                                <button type="submit" name="action" value="ignore" class="action-button4 ignore">Ignore</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p><strong>No new dates</strong>
+                {% endif %}
+                <h2>Pending Dates</h2>
+                {% if ignored_dates or reschedule_dates %} 
+                    {% if ignored_dates %} 
+                        {% for date in ignored_dates %}
+                        <div class="date-card4">
+                            <p style="text-align: center; margin-bottom: 5px;"><strong>{{ date.sender_profile.name }}</strong></p>
+                            <p style="text-align: center; margin-bottom: 20px;">{{ date.date_day.strftime('%d/%m/%Y') }}</p>
+                            <p><strong>Sent on:</strong> {{ date.timestamp_proposal.strftime('%d/%m/%Y %H:%M') }}</p>
+                            <p><strong>Message:</strong> {{ date.opt_text_message or 'No message' }}</p>
+
+                            <!-- Action Buttons -->
+                            <div id="buttons-{{ date.id }}">
+                                <form method="POST" action="{{ url_for('main.handle_date_action', date_id=date.id) }}">
+                                    <textarea name="response_message" placeholder="Write an optional message..." class="response-message4"></textarea>
+                                    <button type="submit" name="action" value="accept" class="action-button4 accept">Accept</button>
+                                    <button type="submit" name="action" value="reject" class="action-button4 reject">Reject</button>
+                                    <button type="submit" name="action" value="reschedule" class="action-button4 reschedule">Reschedule</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    {% if reschedule_dates %} 
+                        {% for date in reschedule_dates %}
+                            <div class="date-card4">
+                                <p style="text-align: center; margin-bottom: 5px;"><strong>{{ date.sender_profile.name }}</strong></p>
+                                <p style="text-align: center; margin-bottom: 20px;">{{ date.date_day.strftime('%d/%m/%Y') }}</p>
+                                <p><strong>Sent on:</strong> {{ date.timestamp_proposal.strftime('%d/%m/%Y %H:%M') }}</p>
+                                <p><strong>Message:</strong> {{ date.opt_text_message or 'No message' }}</p>
+                                <p><strong>Response:</strong> {{ date.opt_text_response or 'No response' }}</p>
+                                
+                                <!-- Action Buttons -->
+                                <div id="buttons-{{ date.id }}">
+                                    <form method="POST" action="{{ url_for('main.handle_date_action', date_id=date.id) }}">
+                                        <textarea name="response_message" placeholder="Write an optional message..." class="response-message4"></textarea>
+                                        <button type="submit" name="action" value="accept" class="action-button4 accept">Accept</button>
+                                        <button type="submit" name="action" value="reject" class="action-button4 reject">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p><strong>No rescheduled dates</strong></p>
+                    {% endif %}
+                {% else %} 
+                    <p><strong>No pending dates</strong>
+                {% endif %}
+            </div>
+        </div>
+                <!-- Return Button -->
+                <div class="edit-profile-container2" style="text-align: left; margin-top: 30px; margin-left: 50px;">
+                    <a href="{{ url_for('main.index') }}" class="edit-profile-button2">Return</a>
+                </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card5">
+        <div class="profile-header5">Restaurant Availability</div>
+        <div class="column-container5">
+            {% for restaurant in restaurants %}
+            <div class="restaurant-card5">
+                <div class="restaurant-info5">
+                    <h3 class="restaurant-name5">{{ restaurant.name }}</h3>
+                    <p class="restaurant-location5">{{ restaurant.location }}</p>
+                </div>
+                <!-- Check restaurant avalavility (js) -->
+                <div class="restaurant-calendar5">
+                    <label for="calendar-{{ restaurant.id }}" class="label5">Select a date:</label>
+                    <input type="date" id="calendar-{{ restaurant.id }}" name="date" class="calendar-input5"
+                           onchange="checkAvailability({{ restaurant.id }}, this.value)" />
+                    <p id="availability-{{ restaurant.id }}" class="availability-text5">Select a date to check availability.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Return button -->
+        <div class="edit-profile-container5">
+            <a href="{{ url_for('main.propose_date', user_id=user_id) }}" class="edit-profile-button5">Return</a>
+        </div>
+        <!-- Only for admin -->
+        {% if can_add_restaurant %}
+        <div class="add-restaurant-container6">
+            <a href="{{ url_for('main.add_restaurant') }}" class="add-restaurant-button6">Add a New Restaurant</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+    // Check restauant availability
+    function checkAvailability(restaurantId, selectedDate) {
+        if (!selectedDate) {
+            alert("Please select a date.");
+            return;
+        }
+
+        // Obtain the abailavility depending on the date and restaurant
+        fetch(`/check_availability/${restaurantId}/${selectedDate}`)
+            .then(response => response.json())
+            .then(data => {
+                const availabilityText = document.getElementById(`availability-${restaurantId}`);
+                if (data.available) {
+                    availabilityText.textContent = `Available tables: ${data.tables}`;
+                    availabilityText.style.color = "green";
+                } else {
+                    availabilityText.textContent = "Fully booked on this date.";
+                    availabilityText.style.color = "red";
+                }
+            })
+            .catch(err => {
+                console.error('Error checking availability:', err);
+                const availabilityText = document.getElementById(`availability-${restaurantId}`);
+                availabilityText.textContent = "Error checking availability.";
+                availabilityText.style.color = "orange";
+            });
+    }
+</script>
+{% endblock %}

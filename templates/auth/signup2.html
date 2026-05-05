@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dating.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+<div class="body0">
+    <div class="wrapper0">
+        <h2>About you:</h2>
+        
+        <!-- Principal form -->
+        <form action="{{ url_for('auth.signup2') }}" method="post" enctype="multipart/form-data">
+            <!-- Name -->
+            <div class="input-box0">
+                <label for="name">Enter your name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group3">
+                <label for="gender">Gender:</label>
+                <div>
+                    <label>
+                        <input type="radio" name="gender" value="1" required>
+                        Man
+                    </label>
+                    <label>
+                        <input type="radio" name="gender" value="2">
+                        Woman
+                    </label>
+                </div>
+            </div>
+
+            <!-- Birthday -->
+            <div class="input-box0">
+                <label for="birthday">Date of birth:</label>
+                <input type="date" id="birthday" name="birthday" required>
+            </div>
+            
+            <!-- Sexual orientation -->
+            <div class="select-box0">
+                <label for="sexual_orentation">What are you looking for:</label>
+                <select id="sexual_orentation" name="sexual_orentation" required>
+                    <option value="" disabled selected>I am looking for...</option>
+                    <option value="1">boys</option>
+                    <option value="2">girls</option>
+                    <option value="3">both</option>
+                </select>
+            </div>
+
+            <!-- Age ranges -->
+            <div class="age-range0">
+                <label>I am looking for people from:</label>
+                <div>
+                    <input type="number" name="lower_age_range" required>
+                    to
+                    <input type="number" name="higher_age_range" required>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-box0">
+                <label>Add a short description about you:</label>
+                <textarea name="description" placeholder="Tell us about yourself..."></textarea>
+            </div>
+
+            <!-- Upload multiple photos -->
+            <div class="upload-box0">
+                <label for="photo">Choose photos:</label>
+                <input type="file" name="photo" id="photo" accept="image/jpeg,image/png" multiple>
+            </div>
+
+            <!-- Button -->
+            <div>
+                <input type="submit" value="Confirm" class="btn">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

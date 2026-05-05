@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card4">
+        <!-- Propose/Reschedule a date -->
+        <div class="profile-header4">
+            {% if change_date %}
+                Change Date
+            {% else %}
+                Propose a Date
+            {% endif %}
+        </div>
+
+        <!-- Two columns container -->
+        <div class="column-container4">
+            <!-- Left column: name and photo -->
+            <div class="column-left4">
+                {% set profile_photo = user_profile.photos | selectattr('is_photo_profile', 'equalto', True) | first %}
+                {% if profile_photo and profile_photo.is_default is false %}
+                    <img src="{{ url_for('static', filename='photos/photo-' ~ profile_photo.id ~ '.' ~ profile_photo.file_extension) }}" 
+                         alt="Profile photo" class="profile-picture4">
+                {% else %}
+                    <!-- Default image if no profile picture -->
+                    <img src="{{ url_for('static', filename='photos/default_profile_picture.png') }}" 
+                         alt="Default Profile Photo" class="profile-picture4">
+                {% endif %}
+                <div class="name4">{{ user_profile.name }}</div>
+            </div>
+
+            <!-- Right column: form -->
+            <div class="column-right4">
+                <form 
+                    action="{% if change_date %}{{ url_for('main.reschedule_date', date_id=date_proposal.id) }}{% else %}{{ url_for('main.propose_date', user_id=user_profile.user_id) }}{% endif %}" 
+                    method="POST" class="form4">
+                    <div class="form-group4">
+                        <label for="date_day" class="label4">Choose a Date:</label>
+                        <input type="date" id="date_day" name="date_day" required class="form-control3">
+                    </div>
+                    <div class="form-group4">
+                        <label for="restaurant_id" class="label4">Choose a Restaurant:</label>
+                        <select id="restaurant_id" name="restaurant_id" required class="form-control3">
+                            {% for restaurant in restaurants %}
+                                <option value="{{ restaurant.id }}">{{ restaurant.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group4">
+                        <label for="optional_message" class="label4">Message:</label>
+                        <textarea name="optional_message" id="optional_message" class="form-control3" rows="3"></textarea>
+                    </div>
+                    <!-- Check restaurant avalavility -->
+                    <div class="edit-profile-container4" style="margin: 0 auto;">
+                        <a href="{{ url_for('main.view_restaurants', user_id=user_profile.user_id) }}" class="edit-profile-button2">Check restaurant availability</a>
+                    </div>
+                    <div class="edit-profile-container4" style="margin-top: 0px;">
+                        <button type="submit" class="edit-profile-button4 send-button4">
+                            <!-- Propose/Reschedule a date -->
+                            {% if change_date %}
+                                Change Date
+                            {% else %}
+                                Send Proposal
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Propose/Reschedule a date return button -->
+        {% if change_date %}
+            <div class="edit-profile-container4" style="text-align: left; margin-top: 30px;">
+                <a href="{{ url_for('main.view_dates') }}" class="edit-profile-button2">Return</a>
+            </div>
+        {% else %}
+            <div class="edit-profile-container4" style="text-align: left; margin-top: 30px;">
+                <a href="{{ url_for('main.profile', user_id=user_profile.user_id) }}" class="edit-profile-button2">Return</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

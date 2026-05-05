@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    {% if user_profile %}
+    {% set profile_photo = user_profile.photos | selectattr('is_photo_profile', 'equalto', True) | first %}
+    <div class="card">
+        <div class="card-inner">
+            <!-- Crad front -->
+            <div class="front">
+                {% if profile_photo and profile_photo.is_default is false %}
+                    <div>
+                        <img src="{{ url_for('static', filename='photos/photo-' ~ profile_photo.id ~ '.' ~ profile_photo.file_extension) }}" alt="Profile photo">
+                    </div>
+                {% else %}
+                    <!-- Default image if no profile picture -->
+                    <div>
+                        <img src="{{ url_for('static', filename='photos/default_profile_picture.png') }}" alt="Default Profile Photo">
+                    </div>
+                {% endif %}
+                <h2>{{ user_profile.name }}</h2>
+            </div>
+            <!-- Card back -->
+            <div class="back">
+                {% if profile_photo and profile_photo.is_default is false %}
+                    <div>
+                        <img src="{{ url_for('static', filename='photos/photo-' ~ profile_photo.id ~ '.' ~ profile_photo.file_extension) }}" alt="Profile photo">
+                    </div>
+                {% else %}
+                    <!-- Default image if no profile picture -->
+                    <div>
+                        <img src="{{ url_for('static', filename='photos/default_profile_picture.png') }}" alt="Default Profile Photo">
+                    </div>
+                {% endif %}
+                <!-- Information of the user -->
+                <h1>{{ user_profile.name }}</h1>
+                <p>{{ user_profile.gender.name }} </p>
+                <p><strong>Age:</strong> {{ age }} </p>
+                <p><strong>Description:</strong> {{ user_profile.description }}</p>
+                <!-- Action buttons -->
+                <div class="row">
+                    <!-- Like -->
+                    {% if like_button == "dislike" %}
+                        <form action="{{ url_for('main.dislike', user_id=user_profile.user_id) }}" method="post">
+                            <button type="submit" class="button like">
+                                <img src="{{ url_for('static', filename='photos/like.png') }}" alt="No Like">
+                            </button>
+                        </form>
+                    {% elif like_button == "like" %}
+                        <form action="{{ url_for('main.like', user_id=user_profile.user_id) }}" method="post">
+                            <button type="submit" class="button like">
+                                <img src="{{ url_for('static', filename='photos/no_like.png') }}" alt="Like">
+                            </button>
+                        </form>
+                    {% endif %}
+                        
+                    <!-- Block -->
+                    {% if block_button == "block" %}
+                            <form action="{{ url_for('main.block', user_id=user_profile.user_id) }}" method="post">
+                                <button type="submit" class="button block">
+                                    <img src="{{ url_for('static', filename='photos/no_block.png') }}" alt="No Block">
+                                </button>
+                            </form>
+                    {% elif block_button == "unblock" %}
+                            <form action="{{ url_for('main.unblock', user_id=user_profile.user_id) }}" method="post">
+                                <button type="submit" class="button block">
+                                    <img src="{{ url_for('static', filename='photos/block.png') }}" alt="Block">
+                                </button>
+                            </form>
+                    {% endif %}
+                    
+                    <!-- View profile -->
+                    <form action="{{ url_for('main.profile', user_id=user_profile.user_id) }}" method="get">
+                        <button type="submit" class="button view_profile">
+                            <img src="{{ url_for('static', filename='photos/profile.png') }}" alt="View Profile">
+                        </button>
+                    </form>
+
+                    <!-- Super Date -->
+                    <form action="{{ url_for('main.propose_date', user_id=user_profile.user_id) }}" method="get" alt="Propose Date">
+                        <button type="submit" class="button view_profile">
+                            <img src="{{ url_for('static', filename='photos/appointment.png') }}" alt="Propose Date">
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>No user profile to show.</p>
+    {% endif %}
+
+    <!-- Next User button -->
+    <form action="{{ url_for('main.next_user') }}" method="post">
+        <button type="submit" class="button next_user">
+            <img src="{{ url_for('static', filename='photos/next.png') }}" alt="Next User">
+        </button>
+    </form>
+
+</div>
+{% endblock %}

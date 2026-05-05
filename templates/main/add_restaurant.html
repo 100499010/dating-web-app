@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card6">
+        <!-- Header -->
+        <div class="profile-header6">Add New Restaurant</div>
+
+        <!-- Form -->
+        <form action="{{ url_for('main.add_restaurant') }}" method="POST" class="form6">
+            <div class="form-group6">
+                <label for="name" class="label6">Restaurant Name:</label>
+                <input type="text" id="name" name="name" required class="form-control6">
+            </div>
+            <div class="form-group6">
+                <label for="location" class="label6">Location (Street):</label>
+                <input type="text" id="location" name="location" required class="form-control6">
+            </div>
+            <div class="form-group6">
+                <label for="capacity" class="label6">Capacity (Number of Dates per Day):</label>
+                <input type="number" id="capacity" name="capacity" min="1" required class="form-control6">
+            </div>
+            <!-- Buttons -->
+            <div class="edit-profile-container6" style="margin-top: 20px; display: flex; align-items: center;">
+                <a href="{{ url_for('main.view_restaurants', user_id=current_user.user_id) }}" class="edit-profile-button2">Return</a>
+                <button type="submit" class="edit-profile-button6">Add Restaurant</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

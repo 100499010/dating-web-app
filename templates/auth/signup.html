@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dating.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet.css'>
+</head>
+<div class="body0">
+    <div class="wrapper0">
+        <h1>SIGN UP</h1> 
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+             <div class="notification">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        <form action="{{ url_for('auth.signup') }}" method="post">
+            <!-- Email Input Box -->
+            <div class="input-box0">
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <i class='bx bx-envelope' ></i>
+            </div>
+            <!-- Name Input Box -->
+            <div class="input-box0">
+                <input type="text" id="username" name="username" placeholder="Enter your user name" required>
+                <i class='bx bx-user'></i>
+            </div>
+            <!-- Password Input Box -->
+            <div class="input-box0">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+            <!-- Repeat password Input Box -->
+            <div class="input-box0">
+                <input type="password" id="password" name="password_repeat" placeholder= "Repeat your password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+
+            <button type="submit" class="btn">Confirm</button>
+        </form>  
+    </div>
+</div>
+</html>

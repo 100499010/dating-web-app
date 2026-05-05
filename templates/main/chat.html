@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg,#e3dbf6,#a99bf9); min-height: 100vh; padding: 20px; ">
+    <!-- Name linked to the profile -->
+    <div>
+        <a href="{{ url_for('main.profile', user_id=selected_user.user_id) }}" 
+           style="color: 4b0082; text-decoration: none; font-size: 20px; font-weight: bold;">
+            <span class="author">View {{ selected_user.name }}'s profile</span>
+        </a>
+    </div>    
+
+    <!-- Messages -->
+    {% for text in texts %}
+        {% if text.sender== current_user%}
+        <div class="form-group3">
+            <div  class="column4 accepted-dates">
+                <p style="text-align: right;">{{text.text}}   {{text.timestamp}}</p>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="form-group3">
+            <div  class="column4 accepted-dates">
+                <p style="text-align: left;"> {{selected_user.name}} {{text.text}} {{text.timestamp}}</p>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <!-- New message form -->
+    <form action="{{ url_for('main.text_text', user_id=selected_user.user_id)}}" style="text-align: right;" method="post">
+        <textarea name="text_sended" placeholder="Write a response" 
+                  style="width: 100%; min-height: 80px; padding: 10px; font-size: 16px; border: 2px solid #a99bf9; border-radius: 10px; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); resize: none; outline: none;"></textarea>
+        <input type="hidden" name="chat_id" value="{{ chat.id }}">
+        <button type="submit" 
+                style="background-color: #4b0082; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+            Send
+        </button>
+    </form>
+    
+</div>
+{% endblock %}

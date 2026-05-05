@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card2" style="max-height: 400px" >
+        <div class="header2">
+            <div class="name-container2">
+                <div class="name2">Edit Account</div>
+            </div>
+        </div>
+        <!-- Form to edit matching preferences -->
+        <form action="{{ url_for('main.edit_matching_preferences', user_id=user.user_id) }}" method="post" class="edit-form3" >
+            <div  style="margin-bottom: 20px; font-family: Arial, sans-serif;">
+                <label style="font-weight: bold; margin-bottom: 10px; display: block;">Looking for people</label>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 16px;">From</span>
+                    <input type="number" name="lower_age_range" value="{{ matching_preferences.lower_age_range }}" 
+                           required style="padding: 8px; border: 1px solid #ccc; border-radius: 5px; width: 80px; text-align: center;">
+                    <span style="font-size: 16px;">to</span>
+                    <input type="number" name="higher_age_range" value="{{ matching_preferences.higher_age_range }}" 
+                           required style="padding: 8px; border: 1px solid #ccc; border-radius: 5px; width: 80px; text-align: center;">
+                    <span style="font-size: 16px;">years old</span>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px; font-family: Arial, sans-serif;">
+                <label for="gender_interests" style="font-weight: bold; margin-bottom: 10px; display: block;">Looking for:</label>
+                <select id="gender_interests" name="gender_interests" required
+                        style="padding: 8px; border: 1px solid #ccc; border-radius: 5px; width: 100%; font-size: 16px;">
+                    <option value="" disabled selected>I am looking for...</option>
+                    <option value="1">boys</option>
+                    <option value="2">girls</option>
+                    <option value="3">both</option>
+                </select>
+            </div>            
+
+            <div class="edit-profile-container2" style="text-align: center; margin-top: 20px; margin-left: 300px;">
+                <button type="submit" class="edit-profile-button2">Save Changes</button>
+            </div>
+        </form>
+        <!-- Return Button -->
+        <div class="edit-profile-container2" style="text-align: left; margin-top: 30px; margin-left: 50px;">
+            <a href="{{ url_for('main.index') }}" class="edit-profile-button2">Return</a>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

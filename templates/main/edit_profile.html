@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card2">
+        <!-- Edit profile picture -->
+        <div class="header2">
+            {% set profile_photo = user_profile.photos | selectattr('is_photo_profile', 'equalto', True) | first %}
+            <div class="profile-photo-container3">
+                {% if profile_photo and profile_photo.is_default is false %}
+                    <img src="{{ url_for('static', filename='photos/photo-' ~ profile_photo.id ~ '.' ~ profile_photo.file_extension) }}" alt="Profile photo" class="profile-picture3">
+                {% else %}
+                    <img src="{{ url_for('static', filename='photos/default_profile_picture.png') }}" alt="Default Profile Photo" class="profile-picture3">
+                {% endif %}
+                <div class="edit-button-container3">
+                    <form action="{{ url_for('main.edit_profile_photo', user_id=user.user_id) }}" method="post" enctype="multipart/form-data">
+                        <input type="file" name="new_profile_photo" id="new_profile_photo" class="file-input3" accept="image/*" style="display: none;">
+                        <button type="button" class="edit-button3" id="edit-profile-photo-btn">Edit</button>
+                        <button type="submit" style="display: none;" id="save-profile-photo-btn">Save</button>
+                    </form>
+                </div>
+            </div>       
+            <div class="name-container2">
+                <div class="name2">Edit Profile</div>
+            </div>
+        </div>
+
+        <!-- Form to update profile -->
+        <form action="{{ url_for('main.edit_profile', user_id=user.user_id) }}" method="post" enctype="multipart/form-data" class="edit-form3">
+            <div class="form-group3">
+                <label for="name">Name:</label>
+                <input type="text" name="name" id="name" class="form-control3" value="{{ user_profile.name }}" required>
+            </div>
+            <div class="form-group3">
+                <label for="gender">Gender:</label>
+                <div class="gender-selection3">
+                    <input type="radio" name="gender" id="male" value="Man" {% if user_profile.gender == 'Male' %}checked{% endif %}>
+                    <label for="male">
+                        <img src="{{ url_for('static', filename='photos/Male.png') }}" alt="Male" class="gender-icon3">
+                    </label>
+                    <input type="radio" name="gender" id="female" value="Woman" {% if user_profile.gender == 'Female' %}checked{% endif %}>
+                    <label for="female">
+                        <img src="{{ url_for('static', filename='photos/Female.png') }}" alt="Female" class="gender-icon3">
+                    </label>
+                </div>
+            </div>            
+            <div class="form-group3">
+                <label for="birthday">Birthday:</label>
+                <input type="date" name="birthday" id="birthday" class="form-control3" value="{{ user_profile.birthday }}">
+            </div>
+            <div class="form-group3">
+                <label for="description">Description:</label>
+                <textarea name="description" id="description" class="form-control3" rows="4">{{ user_profile.description }}</textarea>
+            </div>
+            <div class="form-group3">
+                <label for="photos">Photos:</label>
+                <input type="file" name="photos" id="photos" class="form-control3" multiple accept="image/*">
+            </div>
+
+            <!-- Submit button -->
+            <div class="edit-profile-container2" style="text-align: center; margin-top: 20px;">
+                <button type="submit" class="edit-profile-button2">Save Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

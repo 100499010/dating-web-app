@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg,#e3dbf6,#a99bf9); min-height: 100vh; padding: 20px; display: flex; justify-content: center; align-items: flex-start;">
+   <div class="profile-card4" style="background-color: white; width: 80%; max-width: 600px; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+      {% for chat in chats %}
+         <div class="form-group3">
+            <div class="column4 accepted-dates">
+               <!-- Buton to the chat with that user -->
+               <a href="{{ url_for('main.get_unique_chat', user_id=user_profile[loop.index0-1].user_id, chat_id=chat.id) }}" style="text-decoration: none; color: inherit;">
+                  <div style="text-align: center; margin-bottom: 20px; font-size: 24px; text-transform: uppercase; font-weight: bold;">
+                     {{ user_profile[loop.index0-1].name }}
+                  </div>
+                  <span class="date" style="font-size: 14px; color:#a99bf9 ; display: block; text-align: center; margin-bottom: 10px;">
+                     {{ user_profile[loop.index0-1].timestamp }}
+                  </span>
+                  <div class="text" style="font-size: 16px; color: gray; text-align: center;">
+                     last message: {{ last_text[loop.index0-1].text }}
+                  </div>
+               </a>
+            </div>
+         </div>
+      {% endfor %}
+   </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dating.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='dating.css'>
+</head>
+
+<div class="body0">
+    <div class="wrapper0">
+        <h1>Login</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li> 
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('auth.login') }}" method="POST">
+            <!-- Email Input Box -->
+            <div class="input-box0">
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <i class='bx bxl-gmail'></i>
+            </div>
+
+            <!-- Password Input Box -->
+            <div class="input-box0">
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="register-link">
+            <p>Don't have an account? <a href="{{ url_for('auth.signup') }}">Sign up here</a></p>
+        </div>
+    </div>
+  </div>
+</html>
+

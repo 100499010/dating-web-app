@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-card2">
+        <!-- Header: show profile picture and info of the user -->
+        <div class="header2">
+            {% set profile_photo = user_profile.photos | selectattr('is_photo_profile', 'equalto', True) | first %}
+            {% if profile_photo and profile_photo.is_default is false %}
+                <div>
+                    <img src="{{ url_for('static', filename='photos/photo-' ~ profile_photo.id ~ '.' ~ profile_photo.file_extension) }}" alt="Profile photo" class="profile-picture2">
+                </div>
+            {% else %}
+                <!-- Default image if no profile picture -->
+                <div>
+                    <img src="{{ url_for('static', filename='photos/default_profile_picture.png') }}" alt="Default Profile Photo" class="profile-picture2">
+                </div>
+            {% endif %}
+            <div class="name-container2">
+                <div class="name2">{{ user_profile.name }}</div>
+                <div class="age2">Age: {{ age }}</div>
+            </div>
+        </div>
+
+        <!-- Content: show additional photos -->
+        <div class="content2">
+            <div class="description2">{{ user_profile.description or "No description available" }}</div>
+            <div class="photos2"> 
+                {% if current_photo %}
+                    <img id="photo-display2" 
+                        src="{{ url_for('static', filename='photos/photo-' ~ current_photo.id ~ '.' ~ current_photo.file_extension) }}" 
+                        alt="Photo" 
+                        class="additional-photo">
+                    <a href="{{ url_for('main.next_photo', user_id=user_profile.user_id) }}" class="next-button2">
+                        <img src="{{ url_for('static', filename='photos/next.png') }}" alt="Next">
+                    </a>
+                {% else %}
+                    <p class="no-photos-message">No more photos available.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% if user_profile.user_id == current_user.user_id %}
+            <!-- Edit Profile Button -->
+            <div class="edit-profile-container2" style="text-align: center; margin-top: 20px;">
+                <a href="{{ url_for('main.edit_profile', user_id=user_profile.user_id) }}" class="edit-profile-button2">Edit Profile</a>
+            </div>
+        {% else %}
+            <!-- Show "Propose Date" only if both users like each other -->
+            {% if can_propose_date %}
+                <div class="edit-profile-container2" style="text-align: center; margin-top: 20px;">
+                    <a href="{{ url_for('main.propose_date', user_id=user_profile.user_id) }}" class="edit-profile-button2">Propose Date</a>
+                </div>
+            {% endif %}
+        {% endif %}
+        <!-- Return button -->
+        <div class="edit-profile-container2" style="text-align: left; margin-top: 30px; margin-left: 50px;">
+            <a href="{{ url_for('main.index', user_id=user_profile.user_id) }}" class="edit-profile-button2">Return</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
